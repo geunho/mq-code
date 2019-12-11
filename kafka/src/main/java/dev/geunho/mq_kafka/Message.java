@@ -4,9 +4,9 @@ import java.util.UUID;
 
 public class Message {
   private final UUID id;
-  private final Object body;
+  private final String body;
 
-  public Message(Object contents) {
+  public Message(String contents) {
     id = UUID.randomUUID();
     body = contents;
   }
@@ -15,7 +15,7 @@ public class Message {
     return id.toString();
   }
 
-  public Object getContents() {
+  public String getContents() {
     return body;
   }
 
