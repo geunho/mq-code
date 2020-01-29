@@ -30,17 +30,16 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        this.template.send(topic, "foo1");
-        this.template.send(topic, "foo2");
-        this.template.send(topic, "foo3");
+        this.template.send(topic,"abc", "foo1");
+        this.template.send(topic, "bbc","foo2");
+        this.template.send(topic, "ccc","foo3");
         latch.await(60, TimeUnit.SECONDS);
         logger.info("All received");
     }
 
     @KafkaListener(topics = topic)
-    public void listen(ConsumerRecord<?, ?> cr) throws Exception {
+    public void listen(ConsumerRecord<?, ?> cr) {
         logger.info(cr.toString());
         latch.countDown();
     }
-
 }
