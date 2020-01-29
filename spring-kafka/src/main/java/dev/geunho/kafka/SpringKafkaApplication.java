@@ -14,13 +14,13 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
-public class Application implements CommandLineRunner {
+public class SpringKafkaApplication implements CommandLineRunner {
 
-    public static Logger logger = LoggerFactory.getLogger(Application.class);
+    public static Logger logger = LoggerFactory.getLogger(SpringKafkaApplication.class);
     private static final String topic = "spring-kafka-test";
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args).close();
+        SpringApplication.run(SpringKafkaApplication.class, args).close();
     }
 
     @Autowired
