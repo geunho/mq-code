@@ -24,19 +24,19 @@ public class SpringCloudStreamsKafkaApplication {
     }
 
     @Bean
-    public Supplier<Message<String>> send() {
+    public Supplier<Message<String>> send(String message) {
         return () -> {
-            String value = "foo";
-            logger.info("Sending: " + value);
-            return MessageBuilder.withPayload(value)
-                    .setHeader("partitionKey", value.length())
+            logger.info("Sending: " + message);
+            return MessageBuilder.withPayload(message)
+                    .setHeader("partitionKey", message.length())
                     .build();
         };
     }
 
     @Bean
     public Consumer<Message<String>> listen() {
-        return message -> logger.info(message.getPayload() + " received from partition "
-                + message.getHeaders().get(KafkaHeaders.RECEIVED_PARTITION_ID));
+        return message -> {
+            logger.info("Sending: " + message);
+        };
     }
 }

@@ -1,0 +1,19 @@
+spring:
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: kafka
+          defaultBrokerPort: 9092
+          autoAddPartitions: true
+          minPartitionCount: 4
+      bindings:
+        generate-out-0:
+          destination: upperstring
+          producer:
+            #payload string length - 1 is the partition where it will get stored
+            partition-key-expression: headers['partitionKey'] - 1
+            partition-count: 4
+        listen-in-0:
+          destination: upperstring
+          group: myGroup
