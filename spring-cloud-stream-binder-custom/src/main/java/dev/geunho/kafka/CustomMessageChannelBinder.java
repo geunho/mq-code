@@ -1,44 +1,50 @@
 package dev.geunho.kafka;
 
-import dev.geunho.kafka.config.CustomConsumerProperties;
-import dev.geunho.kafka.config.CustomProducerProperties;
-import org.springframework.cloud.stream.binder.*;
+import org.springframework.cloud.stream.binder.BinderSpecificPropertiesProvider;
+import org.springframework.cloud.stream.binder.ExtendedPropertiesBinder;
+import org.springframework.cloud.stream.binder.kafka.KafkaBindingRebalanceListener;
 import org.springframework.cloud.stream.binder.kafka.KafkaMessageChannelBinder;
+import org.springframework.cloud.stream.binder.kafka.properties.KafkaBinderConfigurationProperties;
 import org.springframework.cloud.stream.binder.kafka.properties.KafkaConsumerProperties;
 import org.springframework.cloud.stream.binder.kafka.properties.KafkaProducerProperties;
 import org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner;
+import org.springframework.cloud.stream.binder.kafka.utils.DlqPartitionFunction;
 import org.springframework.cloud.stream.config.ListenerContainerCustomizer;
 import org.springframework.cloud.stream.config.MessageSourceCustomizer;
-import org.springframework.cloud.stream.provisioning.ConsumerDestination;
-import org.springframework.cloud.stream.provisioning.ProducerDestination;
-import org.springframework.integration.core.MessageProducer;
+import org.springframework.integration.kafka.inbound.KafkaMessageSource;
+import org.springframework.kafka.listener.AbstractMessageListenerContainer;
 import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.MessageHandler;
 
-public class CustomMessageChannelBinder extends
-        AbstractMessageChannelBinder<ExtendedConsumerProperties<KafkaConsumerProperties>, ExtendedProducerProperties<KafkaProducerProperties>, KafkaTopicProvisioner>
-        implements
-        ExtendedPropertiesBinder<MessageChannel, KafkaConsumerProperties, KafkaProducerProperties> {
+import java.util.Map;
 
-    private final KafkaMessageChannelBinder kafkaBinder;
+public class CustomMessageChannelBinder extends KafkaMessageChannelBinder
+        implements ExtendedPropertiesBinder<MessageChannel, KafkaConsumerProperties, KafkaProducerProperties> {
 
-    public CustomMessageChannelBinder(String[] headersToEmbed, KafkaTopicProvisioner provisioningProvider, KafkaMessageChannelBinder kafkaBinder) {
-        super(headersToEmbed, provisioningProvider);
-        this.kafkaBinder = kafkaBinder;
+    public CustomMessageChannelBinder(KafkaBinderConfigurationProperties configurationProperties, KafkaTopicProvisioner provisioningProvider) {
+        super(configurationProperties, provisioningProvider);
     }
 
-    public CustomMessageChannelBinder(String[] headersToEmbed, KafkaTopicProvisioner provisioningProvider, ListenerContainerCustomizer<?> containerCustomizer, MessageSourceCustomizer<?> sourceCustomizer, KafkaMessageChannelBinder kafkaBinder) {
-        super(headersToEmbed, provisioningProvider, containerCustomizer, sourceCustomizer);
-        this.kafkaBinder = kafkaBinder;
+    public CustomMessageChannelBinder(KafkaBinderConfigurationProperties configurationProperties, KafkaTopicProvisioner provisioningProvider, ListenerContainerCustomizer<AbstractMessageListenerContainer<?, ?>> containerCustomizer, KafkaBindingRebalanceListener rebalanceListener) {
+        super(configurationProperties, provisioningProvider, containerCustomizer, rebalanceListener);
     }
 
+    public CustomMessageChannelBinder(KafkaBinderConfigurationProperties configurationProperties, KafkaTopicProvisioner provisioningProvider, ListenerContainerCustomizer<AbstractMessageListenerContainer<?, ?>> containerCustomizer, MessageSourceCustomizer<KafkaMessageSource<?, ?>> sourceCustomizer, KafkaBindingRebalanceListener rebalanceListener, DlqPartitionFunction dlqPartitionFunction) {
+        super(configurationProperties, provisioningProvider, containerCustomizer, sourceCustomizer, rebalanceListener, dlqPartitionFunction);
+    }
+
+    /*
     @Override
-    public CustomConsumerProperties getExtendedConsumerProperties(String channelName) {
+    public KafkaConsumerProperties getExtendedConsumerProperties(String channelName) {
         return null;
     }
 
     @Override
-    public CustomProducerProperties getExtendedProducerProperties(String channelName) {
+    public KafkaProducerProperties getExtendedProducerProperties(String channelName) {
+        return null;
+    }
+
+    @Override
+    public Map<String, ?> getBindings() {
         return null;
     }
 
@@ -51,14 +57,5 @@ public class CustomMessageChannelBinder extends
     public Class<? extends BinderSpecificPropertiesProvider> getExtendedPropertiesEntryClass() {
         return null;
     }
-
-    @Override
-    protected MessageHandler createProducerMessageHandler(ProducerDestination destination, ExtendedProducerProperties<KafkaProducerProperties> producerProperties, MessageChannel errorChannel) throws Exception {
-        return null;
-    }
-
-    @Override
-    protected MessageProducer createConsumerEndpoint(ConsumerDestination destination, String group, ExtendedConsumerProperties<KafkaConsumerProperties> properties) throws Exception {
-        return null;
-    }
+     */
 }
